@@ -1,6 +1,6 @@
 {
   "name": "enquire-simple",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Simle wrapper for enquire",
   "main": "index.js",
   "repository": "laggingreflex/enquire-simple",
