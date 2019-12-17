@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": "laggingreflex/enquire-simple",
   "dependencies": {
-    "enquirer": "^1.0.3",
+    "enquirer": "^2.3.2",
     "prompt-confirm": "^2.0.4",
     "prompt-password": "^1.2.0"
   }
