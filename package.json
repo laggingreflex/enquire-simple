@@ -1,12 +1,10 @@
 {
   "name": "enquire-simple",
   "version": "0.3.0",
-  "description": "Simple wrapper for enquire",
+  "description": "Simpler API for enquirer",
   "main": "index.js",
   "repository": "laggingreflex/enquire-simple",
   "dependencies": {
-    "enquirer": "^2.3.2",
-    "prompt-confirm": "^2.0.4",
-    "prompt-password": "^1.2.0"
+    "enquirer": "^2.3.2"
   }
 }

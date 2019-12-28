@@ -1,27 +1,56 @@
 const Enquirer = require('enquirer');
-const Confirm = require('prompt-confirm');
-const Password = require('prompt-password');
 
-const enquirer = new Enquirer();
+module.exports = new Proxy(base(), { get });
 
-enquirer.register('confirm', Confirm);
-enquirer.register('password', Password);
+function base(type = 'input') {
+  return async function EnquireSimple(opts, defaultValue) {
+    if (typeof opts === 'string') opts = { message: opts };
+    const processChoice = processChoices(opts);
+    const { name: answer } = await Enquirer.prompt({
+      type,
+      initial: defaultValue,
+      ...opts,
+      name: 'name',
+    });
+    if (answer === undefined && undefined !== defaultValue) {
+      return defaultValue;
+    } else if (processChoice) {
+      return processChoice(answer);
+    } else {
+      return answer;
+    }
+  }
+}
 
-exports.input = exports.prompt = (message, def) => enquirer.prompt({
-  name: 'input',
-  message,
-  default: def,
-}).then(({ input }) => input);
+function get(x, type) {
+  return new Proxy(base(type), { get });
+}
 
-exports.confirm = (message, def) => enquirer.prompt({
-  name: 'confirm',
-  type: 'confirm',
-  default: def || false,
-  message,
-}).then(({ confirm }) => confirm);
+function processChoices(opts) {
+  const { choices } = opts;
+  if (!choices) return;
+  if (Array.isArray(choices)) return;
+  const keys = Object.keys(choices);
+  opts.choices = keys;
+  return async answer => {
+    const result = {};
+    for (const key of arrify(answer)) {
+      if (!(key in choices)) return;
+      const fn = choices[key].execute || choices[key];
+      if (typeof fn === 'function') {
+        result[key] = await choices[key]();
+      } else {
+        result[key] = true;
+      }
+    }
+    if (typeof answer === 'string') {
+      return result[answer];
+    } else {
+      return result;
+    }
+  }
+}
 
-exports.password = (message, def) => enquirer.prompt({
-  name: 'password',
-  type: 'password',
-  message,
-}).then(({ password }) => password);
+function arrify(array) {
+  return Array.isArray(array) ? array : array === undefined ? [] : [array];
+}
