@@ -1,6 +1,6 @@
 {
   "name": "enquire-simple",
-  "version": "0.3.0",
+  "version": "2.0.0",
   "description": "Simpler API for enquirer",
   "main": "index.js",
   "repository": "laggingreflex/enquire-simple",
