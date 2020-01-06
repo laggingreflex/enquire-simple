@@ -1,4 +1,8 @@
 const Enquirer = require('enquirer');
+const enquirer = new Enquirer();
+enquirer.register('string', Enquirer.StringPrompt);
+enquirer.register('boolean', Enquirer.BooleanPrompt);
+enquirer.register('array', Enquirer.ArrayPrompt);
 
 module.exports = new Proxy(base(), { get });
 
@@ -6,12 +10,21 @@ function base(type = 'input') {
   return async function EnquireSimple(opts, defaultValue) {
     if (typeof opts === 'string') opts = { message: opts };
     const processChoice = processChoices(opts);
-    const { name: answer } = await Enquirer.prompt({
-      type,
-      initial: defaultValue,
-      ...opts,
-      name: 'name',
-    });
+    let answer;
+    try {
+      const { name } = await enquirer.prompt({
+        type,
+        initial: defaultValue,
+        ...opts,
+        name: 'name',
+      });
+      answer = name;
+    } catch (error) {
+      if (error !== '') {
+        /* https://github.com/enquirer/enquirer/issues/225 */
+        throw error;
+      }
+    }
     if (answer === undefined && undefined !== defaultValue) {
       return defaultValue;
     } else if (processChoice) {
