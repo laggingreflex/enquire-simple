@@ -1,6 +1,7 @@
 const Enquirer = require('enquirer');
 const enquirer = new Enquirer();
 enquirer.register('string', Enquirer.StringPrompt);
+enquirer.register('number', Enquirer.NumberPrompt);
 enquirer.register('boolean', Enquirer.BooleanPrompt);
 enquirer.register('array', Enquirer.ArrayPrompt);
 
